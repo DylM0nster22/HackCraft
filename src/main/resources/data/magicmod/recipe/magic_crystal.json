@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "magicmod:magic_crystal_block"
+    }
+  ],
+  "result": {
+    "id": "magicmod:magic_crystal",
+    "count": 9
+  }
+}

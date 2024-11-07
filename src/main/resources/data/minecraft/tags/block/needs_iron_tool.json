@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "magicmod:block/magic_crystal_block",
+    "magicmod:block/magic_crystal_ore"
+  ]
+}

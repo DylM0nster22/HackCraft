@@ -4,7 +4,6 @@ import net.dylan.magicmod.block.ModBlocks;
 import net.dylan.magicmod.item.ModItems;
 import net.dylan.magicmod.item.ModItemsGroups;
 import net.fabricmc.api.ModInitializer;
-
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.registry.RegistryKey;
@@ -25,11 +24,9 @@ public class MagicMod implements ModInitializer {
 			RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of("magicmod", "magic_crystal_deepslate_ore"));
 
 
-
 	@Override
 	public void onInitialize() {
 		ModItemsGroups.registerItemGroups();
-
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
 
@@ -39,7 +36,6 @@ public class MagicMod implements ModInitializer {
 				MAGIC_CRYSTAL_ORE_PLACED_KEY
 		);
 
-		// Add magic crystal deepslate ore to overworld generation
 		BiomeModifications.addFeature(
 				BiomeSelectors.foundInOverworld(),
 				GenerationStep.Feature.UNDERGROUND_ORES,
@@ -47,3 +43,5 @@ public class MagicMod implements ModInitializer {
 		);
 	}
 }
+
+

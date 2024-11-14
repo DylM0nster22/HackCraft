@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "item",
+  "key": {
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "/": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "pattern": [
+    "gig",
+    "i/i",
+    "gig"
+  ],
+  "result": {
+    "id": "magicmod:quantum_cog",
+    "count": 9
+  }
+}

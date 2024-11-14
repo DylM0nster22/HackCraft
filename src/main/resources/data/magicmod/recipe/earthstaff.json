@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "magicmod:earth_crystal"
+    },
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "/": {
+      "item": "minecraft:blaze_rod"
+    }
+  },
+  "pattern": [
+    "g#g",
+    " / ",
+    " / "
+  ],
+  "result": {
+    "id": "magicmod:earthstaff",
+    "count": 1
+  }
+}

@@ -1,7 +1,17 @@
 {
   "item.magicmod.magic_sword": "Magic Sword",
   "item.magicmod.magic_crystal": "Magic Crystal",
-  "item.magicmod.powerstaff": "Powerstaff",
+  "item.magicmod.powerstaff": "Magic Staff",
+  "item.magicmod.firestaff": "Fire Staff",
+  "item.magicmod.icestaff": "Ice Staff",
+  "item.magicmod.earthstaff": "Earth Staff",
+  "item.magicmod.lightningstaff": "Lightning Staff",
+  "item.magicmod.masterstaff": "Master Staff",
+  "item.magicmod.fire_crystal": "Fire Crystal",
+  "item.magicmod.ice_crystal": "Ice Crystal",
+  "item.magicmod.earth_crystal": "Earth Crystal",
+  "item.magicmod.lightning_crystal": "Lightning Crystal",
+
 
   "block.magicmod.magic_crystal_block": "Block of Magic Crystal",
   "block.magicmod.magic_tnt": "Magic TNT",
@@ -9,5 +19,7 @@
   "block.magicmod.magic_crystal_deepslate_ore": "Magic Crystal Deepslate Ore",
 
 
-  "itemgroup.magicmod.magic": "Magic"
+  "itemgroup.magicmod.magic": "Magic",
+
+  "death.attack.earth_slam": "%1$s was slammed into the ground by %2$s"
 }

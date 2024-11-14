@@ -20,10 +20,6 @@ public class ModBlocks {
         new Block(AbstractBlock.Settings.create().strength(6f)
                 .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
 
-    public static final Block MAGIC_TNT = registerBlock("magic_tnt",
-            new Block(AbstractBlock.Settings.create().strength(1f)
-                    .requiresTool().sounds(BlockSoundGroup.GRASS)));
-
     public static final Block MAGIC_CRYSTAL_ORE = registerBlock("magic_crystal_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 5),
                     AbstractBlock.Settings.create().strength(3f).requiresTool().sounds(BlockSoundGroup.STONE)));
@@ -31,6 +27,10 @@ public class ModBlocks {
     public static final Block MAGIC_CRYSTAL_DEEPSLATE_ORE = registerBlock("magic_crystal_deepslate_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(3, 6),
                     AbstractBlock.Settings.create().strength(4f).requiresTool().sounds(BlockSoundGroup.DEEPSLATE)));
+
+    public static final Block MAGIC_TNT = registerBlock("magic_tnt_block",
+            new Block(AbstractBlock.Settings.create().strength(1f)
+                    .requiresTool().sounds(BlockSoundGroup.GRASS).nonOpaque()));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
@@ -48,7 +48,6 @@ public class ModBlocks {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(entries -> {
             entries.add(ModBlocks.MAGIC_CRYSTAL_BLOCK);
-            entries.add(ModBlocks.MAGIC_TNT);
         });
     }
 }

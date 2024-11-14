@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "item",
+  "key": {
+    "g": {
+      "item": "minecraft:lightning_rod"
+    },
+    "/": {
+      "item": "minecraft:magic_crystal"
+    }
+  },
+  "pattern": [
+    "ggg",
+    "g/g",
+    "ggg"
+  ],
+  "result": {
+    "id": "magicmod:lightning_crystal",
+    "count": 9
+  }
+}

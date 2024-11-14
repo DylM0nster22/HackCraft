@@ -19,10 +19,20 @@ public class ModItemsGroups {
                         entries.add(ModItems.MAGIC_CRYSTAL);
                         entries.add(ModItems.MAGIC_SWORD);
                         entries.add(ModBlocks.MAGIC_CRYSTAL_BLOCK);
-                        entries.add(ModBlocks.MAGIC_TNT);
+                        entries.add(ModItems.FIRESTAFF);
                         entries.add(ModBlocks.MAGIC_CRYSTAL_ORE);
                         entries.add(ModBlocks.MAGIC_CRYSTAL_DEEPSLATE_ORE);
-                        entries.add(ModItems.POWERSTAFF);
+                        entries.add(ModItems.MASTERSTAFF);
+                        entries.add(ModItems.FIRE_CRYSTAL);
+                        entries.add(ModItems.ICE_CRYSTAL);
+                        entries.add(ModItems.EARTH_CRYSTAL);
+                        entries.add(ModItems.LIGHTNING_CRYSTAL);
+                        entries.add(ModItems.LIGHTNINGSTAFF);
+                        entries.add(ModItems.EARTHSTAFF);
+                        entries.add(ModItems.ICESTAFF);
+                        entries.add(ModItems.QUANTUMSTAFF);
+                        entries.add(ModItems.QUANTUM_COG);
+
 
                     }).build());
 

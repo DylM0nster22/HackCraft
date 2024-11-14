@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "item",
+  "key": {
+    "g": {
+      "item": "minecraft:ice_block"
+    },
+    "/": {
+      "item": "minecraft:magic_crystal"
+    }
+  },
+  "pattern": [
+    "ggg",
+    "g/g",
+    "ggg"
+  ],
+  "result": {
+    "id": "magicmod:ice_crystal",
+    "count": 8
+  }
+}

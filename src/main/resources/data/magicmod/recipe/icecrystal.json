@@ -3,19 +3,22 @@
   "category": "item",
   "key": {
     "g": {
-      "item": "minecraft:ice_block"
+      "item": "minecraft:packed_ice"
     },
+    "s": {
+      "item": "minecraft:snowball"
+    } ,
     "/": {
-      "item": "minecraft:magic_crystal"
+      "item": "magicmod:magic_crystal"
     }
   },
   "pattern": [
-    "ggg",
-    "g/g",
-    "ggg"
+    " g ",
+    "s/s",
+    " g "
   ],
   "result": {
     "id": "magicmod:ice_crystal",
-    "count": 8
+    "count": 1
   }
 }

@@ -20,6 +20,57 @@ public class ModBlocks {
         new Block(AbstractBlock.Settings.create().strength(6f)
                 .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
 
+    public static final Block LIGHTNING_CRYSTAL_BLOCK = registerBlock("lightning_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block QUANTUM_CRYSTAL_BLOCK = registerBlock("quantum_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block ICE_CRYSTAL_BLOCK = registerBlock("ice_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block WIND_CRYSTAL_BLOCK = registerBlock("wind_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block LAVA_CRYSTAL_BLOCK = registerBlock("lava_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block EARTH_CRYSTAL_BLOCK = registerBlock("earth_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block FIRE_CRYSTAL_BLOCK = registerBlock("fire_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block ECLIPSE_CRYSTAL_BLOCK = registerBlock("eclipse_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block LUNAR_CRYSTAL_BLOCK = registerBlock("lunar_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block SOLAR_CRYSTAL_BLOCK = registerBlock("solar_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block OBSIDIAN_CRYSTAL_BLOCK = registerBlock("obsidian_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block WATER_CRYSTAL_BLOCK = registerBlock("water_crystal_block",
+            new Block(AbstractBlock.Settings.create().strength(6f)
+                    .requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+
+
+
     public static final Block MAGIC_CRYSTAL_ORE = registerBlock("magic_crystal_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 5),
                     AbstractBlock.Settings.create().strength(3f).requiresTool().sounds(BlockSoundGroup.STONE)));
@@ -27,10 +78,6 @@ public class ModBlocks {
     public static final Block MAGIC_CRYSTAL_DEEPSLATE_ORE = registerBlock("magic_crystal_deepslate_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(3, 6),
                     AbstractBlock.Settings.create().strength(4f).requiresTool().sounds(BlockSoundGroup.DEEPSLATE)));
-
-    public static final Block MAGIC_TNT = registerBlock("magic_tnt_block",
-            new Block(AbstractBlock.Settings.create().strength(1f)
-                    .requiresTool().sounds(BlockSoundGroup.GRASS).nonOpaque()));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

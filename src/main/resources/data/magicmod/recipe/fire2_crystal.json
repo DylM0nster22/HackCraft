@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "magicmod:fire_crystal_block"
+    }
+  ],
+  "result": {
+    "id": "magicmod:fire_crystal",
+    "count": 9
+  }
+}

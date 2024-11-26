@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "magicmod:block/lightning_crystal_block"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "magicmod:block/lava_crystal_block"
+    }
+  }
+}

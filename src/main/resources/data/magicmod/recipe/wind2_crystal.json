@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "magicmod:wind_crystal_block"
+    }
+  ],
+  "result": {
+    "id": "magicmod:wind_crystal",
+    "count": 9
+  }
+}

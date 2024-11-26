@@ -3,22 +3,22 @@
   "category": "item",
   "key": {
     "s": {
-      "item": "minecraft:stone_block"
+      "item": "minecraft:dirt"
     },
     "g": {
-      "item": "minecraft:gravel"
+      "item": "minecraft:cobblestone"
     } ,
     "/": {
-      "item": "minecraft:magic_crystal"
+      "item": "magicmod:magic_crystal"
     }
   },
   "pattern": [
-    "gsg",
-    "s/s",
-    "gsg"
+    " s ",
+    "g/g",
+    " s "
   ],
   "result": {
     "id": "magicmod:earth_crystal",
-    "count": 9
+    "count": 1
   }
 }

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "item",
+  "key": {
+    "s": {
+      "item": "magicmod:solar_crystal"
+    },
+    "g": {
+      "item": "magicmod:lunar_crystal"
+    } ,
+    "#": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "pattern": [
+    " g ",
+    "# #",
+    " s "
+  ],
+  "result": {
+    "id": "magicmod:eclipse_crystal",
+    "count": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "item",
+  "key": {
+    "s": {
+      "item": "minecraft:ender_pearl"
+    },
+    "g": {
+      "item": "minecraft:amethyst_shard"
+    } ,
+    "/": {
+      "item": "magicmod:magic_crystal"
+    }
+  },
+  "pattern": [
+    " s ",
+    "g/g",
+    " s "
+  ],
+  "result": {
+    "id": "magicmod:quantum_crystal",
+    "count": 1
+  }
+}

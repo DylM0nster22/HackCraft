@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "magicmod:ice_crystal_block"
+    }
+  ],
+  "result": {
+    "id": "magicmod:ice_crystal",
+    "count": 9
+  }
+}

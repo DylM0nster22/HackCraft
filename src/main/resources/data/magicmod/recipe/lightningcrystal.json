@@ -3,19 +3,22 @@
   "category": "item",
   "key": {
     "g": {
-      "item": "minecraft:lightning_rod"
+      "item": "minecraft:glowstone_dust"
+    },
+    "c": {
+      "item": "minecraft:iron_ingot"
     },
     "/": {
-      "item": "minecraft:magic_crystal"
+      "item": "magicmod:magic_crystal"
     }
   },
   "pattern": [
-    "ggg",
-    "g/g",
-    "ggg"
+    " g ",
+    "c/c",
+    " g "
   ],
   "result": {
     "id": "magicmod:lightning_crystal",
-    "count": 9
+    "count": 1
   }
 }

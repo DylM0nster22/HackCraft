@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "magicmod:eclipse_crystal_block"
+    }
+  ],
+  "result": {
+    "id": "magicmod:eclipse_crystal",
+    "count": 9
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "item",
+  "key": {
+    "g": {
+      "item": "minecraft:magma_cream"
+    },
+    "n": {
+      "item": "minecraft:nether_brick"
+    } ,
+    "/": {
+      "item": "magicmod:magic_crystal"
+    }
+  },
+  "pattern": [
+    " g ",
+    "n/n",
+    " g "
+  ],
+  "result": {
+    "id": "magicmod:lava_crystal",
+    "count": 1
+  }
+}

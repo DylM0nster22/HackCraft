@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "magicmod:quantum_crystal_block"
+    }
+  ],
+  "result": {
+    "id": "magicmod:quantum_crystal",
+    "count": 9
+  }
+}

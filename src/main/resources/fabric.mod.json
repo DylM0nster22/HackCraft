@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "magiccraft",
-	"version": "${1}",
-	"name": "<Magic_Craft>",
+	"id": "magicmod",
+	"version": "${5}",
+	"name": "Magic_Craft",
 	"description": "This is a basic magic mod I made.",
 	"authors": [
 		"Dylan"

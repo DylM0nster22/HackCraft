@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "magicmod:block/quantum_crystal_block"
+    }
+  }
+}

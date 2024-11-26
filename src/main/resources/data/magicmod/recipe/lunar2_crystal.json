@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "magicmod:lunar_crystal_block"
+    }
+  ],
+  "result": {
+    "id": "magicmod:lunar_crystal",
+    "count": 9
+  }
+}

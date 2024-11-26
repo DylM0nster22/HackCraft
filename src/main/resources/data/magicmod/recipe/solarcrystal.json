@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "item",
+  "key": {
+    "s": {
+      "item": "minecraft:sunflower"
+    },
+    "g": {
+      "item": "minecraft:gold_block"
+    } ,
+    "/": {
+      "item": "magicmod:magic_crystal"
+    }
+  },
+  "pattern": [
+    " s ",
+    "g/g",
+    " s "
+  ],
+  "result": {
+    "id": "magicmod:solar_crystal",
+    "count": 1
+  }
+}

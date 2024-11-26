@@ -5,17 +5,20 @@
     "g": {
       "item": "minecraft:blaze_powder"
     },
+    "c": {
+      "item": "minecraft:coal"
+    } ,
     "/": {
-      "item": "minecraft:magic_crystal"
+      "item": "magicmod:magic_crystal"
     }
   },
   "pattern": [
-    "ggg",
-    "g/g",
-    "ggg"
+    " g ",
+    "c/c",
+    " g "
   ],
   "result": {
     "id": "magicmod:fire_crystal",
-    "count": 9
+    "count": 1
   }
 }

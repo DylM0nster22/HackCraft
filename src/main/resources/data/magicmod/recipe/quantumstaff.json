@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "#": {
-      "item": "magicmod:quantum_cog"
+      "item": "magicmod:quantum_crystal"
     },
     "g": {
       "item": "minecraft:gold_ingot"

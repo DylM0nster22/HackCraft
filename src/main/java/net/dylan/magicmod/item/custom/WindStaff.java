@@ -62,13 +62,8 @@ public class WindStaff extends Item {
     }
 
     private void onWorldTick(ServerWorld world) {
-        // Iterate over active tornadoes and update them
-        activeTornadoes.removeIf(tornado -> {
-            if (tornado.world == world) {
-                return tornado.tick();
-            }
-            return false;
-        });
+        // Remove tornadoes for unloaded worlds and update active ones
+        activeTornadoes.removeIf(tornado -> tornado.world == null || !tornado.world.getServer().isRunning() || tornado.tick());
     }
 
     private static class TornadoEffect {
@@ -99,7 +94,7 @@ public class WindStaff extends Item {
 
             // Lift and rotate entities
             Box box = new Box(center.add(-currentRadius, -currentHeight, -currentRadius), center.add(currentRadius, currentHeight, currentRadius));
-            for (Entity entity : world.getEntitiesByClass(Entity.class, box, e -> e instanceof LivingEntity || e instanceof ItemEntity)) {
+            for (Entity entity : world.getEntitiesByClass(Entity.class, box, e -> (e instanceof LivingEntity || e instanceof ItemEntity) && !(e instanceof net.minecraft.entity.boss.BossBar) && !(e instanceof net.minecraft.entity.passive.TameableEntity))) {
                 if (entity.squaredDistanceTo(center) <= currentRadius * currentRadius) {
                     double angle = Math.atan2(entity.getZ() - center.z, entity.getX() - center.x) + ROTATION_SPEED;
                     double distance = Math.sqrt(entity.squaredDistanceTo(center));
@@ -114,7 +109,7 @@ public class WindStaff extends Item {
                 }
             }
 
-            // Spawn particles
+            // Dramatic tornado particles
             spawnParticles(currentRadius, currentHeight);
 
             ticksElapsed++;
@@ -122,14 +117,19 @@ public class WindStaff extends Item {
         }
 
         private void spawnParticles(double radius, double height) {
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 40; i++) {
                 double angle = world.random.nextDouble() * 2 * Math.PI;
                 double distance = world.random.nextDouble() * radius;
                 double x = center.x + distance * Math.cos(angle);
                 double z = center.z + distance * Math.sin(angle);
                 double y = center.y + world.random.nextDouble() * height;
-
                 world.spawnParticles(ParticleTypes.CLOUD, x, y, z, 1, 0, 0, 0, 0);
+                if (world.random.nextFloat() < 0.2f) {
+                    world.spawnParticles(ParticleTypes.CRIT, x, y, z, 1, 0, 0, 0, 0.01);
+                }
+                if (world.random.nextFloat() < 0.1f) {
+                    world.spawnParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 1, 0, 0, 0, 0.01);
+                }
             }
         }
     }

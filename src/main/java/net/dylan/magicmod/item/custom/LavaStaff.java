@@ -15,20 +15,34 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import net.minecraft.block.Block;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.server.MinecraftServer;
 
 public class LavaStaff extends Item {
 
     private static final int RANGE = 50;
-    private static final int DELAY_SECONDS = 5;
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private static final int LAVA_DURATION_TICKS = 100; // 5 seconds * 20 ticks per second
+    private final Map<BlockPos, LavaBlockInfo> lavaPositions = new HashMap<>();
+    
+    private static class LavaBlockInfo {
+        int ticksLeft;
+        BlockState originalState;
+        World world;
+        
+        LavaBlockInfo(int ticksLeft, BlockState originalState, World world) {
+            this.ticksLeft = ticksLeft;
+            this.originalState = originalState;
+            this.world = world;
+        }
+    }
 
     public LavaStaff(Settings settings) {
         super(settings);
+        // Register the server tick event listener
+        ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
     }
 
     @Override
@@ -47,7 +61,6 @@ public class LavaStaff extends Item {
         }
 
         BlockPos targetPos = hitResult.getBlockPos();
-        Map<BlockPos, BlockState> originalStates = new HashMap<>();
 
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
@@ -55,22 +68,13 @@ public class LavaStaff extends Item {
                 if (pos != null) {
                     BlockState currentState = world.getBlockState(pos);
                     if (isReplaceable(currentState)) {
-                        originalStates.put(pos, currentState);
                         world.setBlockState(pos, Blocks.LAVA.getDefaultState());
+                        // Schedule this lava block for removal
+                        lavaPositions.put(pos, new LavaBlockInfo(LAVA_DURATION_TICKS, currentState, world));
                     }
                 }
             }
         }
-
-        scheduler.schedule(() -> {
-            for (Map.Entry<BlockPos, BlockState> entry : originalStates.entrySet()) {
-                BlockPos pos = entry.getKey();
-                BlockState originalState = entry.getValue();
-                if (world.getBlockState(pos).getBlock() == Blocks.LAVA) {
-                    world.setBlockState(pos, originalState);
-                }
-            }
-        }, DELAY_SECONDS, TimeUnit.SECONDS);
 
         player.swingHand(hand);
         return ActionResult.SUCCESS;
@@ -97,5 +101,23 @@ public class LavaStaff extends Item {
     private boolean isReplaceable(BlockState state) {
         Block block = state.getBlock();
         return block != Blocks.SHORT_GRASS && block != Blocks.TALL_GRASS && block != Blocks.TALL_SEAGRASS;
+    }
+
+    private void onServerTick(MinecraftServer server) {
+        Iterator<Map.Entry<BlockPos, LavaBlockInfo>> iterator = lavaPositions.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<BlockPos, LavaBlockInfo> entry = iterator.next();
+            LavaBlockInfo lavaInfo = entry.getValue();
+            int ticksLeft = lavaInfo.ticksLeft - 1;
+            if (ticksLeft <= 0) {
+                BlockPos pos = entry.getKey();
+                if (lavaInfo.world.getBlockState(pos).getBlock() == Blocks.LAVA) {
+                    lavaInfo.world.setBlockState(pos, lavaInfo.originalState);
+                }
+                iterator.remove();
+            } else {
+                lavaInfo.ticksLeft = ticksLeft;
+            }
+        }
     }
 }

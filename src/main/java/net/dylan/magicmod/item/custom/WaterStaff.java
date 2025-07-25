@@ -15,19 +15,33 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.server.MinecraftServer;
 
 public class WaterStaff extends Item {
     private static final int WAVE_RANGE = 10;
     private static final int COOLDOWN_TICKS = 200; // 10 seconds
-    private static final int WATER_LIFETIME_SECONDS = 5;
-
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private static final int WATER_LIFETIME_TICKS = 100; // 5 seconds * 20 ticks per second
+    
+    private final Map<BlockPos, WaterBlockInfo> waterPositions = new HashMap<>();
+    
+    private static class WaterBlockInfo {
+        int ticksLeft;
+        World world;
+        
+        WaterBlockInfo(int ticksLeft, World world) {
+            this.ticksLeft = ticksLeft;
+            this.world = world;
+        }
+    }
 
     public WaterStaff(Settings settings) {
         super(settings);
+        // Register the server tick event listener
+        ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
     }
 
     @Override
@@ -41,7 +55,8 @@ public class WaterStaff extends Item {
                 BlockPos pos = startPos.offset(direction, i);
                 if (world.isAir(pos) || world.getBlockState(pos).isReplaceable()) {
                     world.setBlockState(pos, Blocks.WATER.getDefaultState());
-                    scheduleWaterRemoval(world, pos);
+                    // Schedule this water block for removal
+                    waterPositions.put(pos, new WaterBlockInfo(WATER_LIFETIME_TICKS, world));
                 } else if (world.getBlockState(pos).isOf(Blocks.FIRE)) {
                     world.setBlockState(pos, Blocks.AIR.getDefaultState());
                 } else if (world.getBlockState(pos).isOf(Blocks.LAVA)) {
@@ -60,11 +75,21 @@ public class WaterStaff extends Item {
         return TypedActionResult.success(user.getStackInHand(hand));
     }
 
-    private void scheduleWaterRemoval(World world, BlockPos pos) {
-        scheduler.schedule(() -> {
-            if (world.getBlockState(pos).isOf(Blocks.WATER)) {
-                world.setBlockState(pos, Blocks.AIR.getDefaultState());
+    private void onServerTick(MinecraftServer server) {
+        Iterator<Map.Entry<BlockPos, WaterBlockInfo>> iterator = waterPositions.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<BlockPos, WaterBlockInfo> entry = iterator.next();
+            WaterBlockInfo waterInfo = entry.getValue();
+            int ticksLeft = waterInfo.ticksLeft - 1;
+            if (ticksLeft <= 0) {
+                BlockPos pos = entry.getKey();
+                if (waterInfo.world.getBlockState(pos).isOf(Blocks.WATER)) {
+                    waterInfo.world.setBlockState(pos, Blocks.AIR.getDefaultState());
+                }
+                iterator.remove();
+            } else {
+                waterInfo.ticksLeft = ticksLeft;
             }
-        }, WATER_LIFETIME_SECONDS, TimeUnit.SECONDS);
+        }
     }
 }

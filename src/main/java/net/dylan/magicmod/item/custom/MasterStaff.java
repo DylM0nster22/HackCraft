@@ -33,18 +33,24 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.entity.damage.DamageSource;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.server.MinecraftServer;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 public class MasterStaff extends Item {
     private Element currentElement = Element.FIRE;
     private long lastToggleTime = 0;
     private static final long TOGGLE_COOLDOWN = 500; // cooldown in milliseconds
+    private static final int ICE_DURATION_TICKS = 100; // 5 seconds * 20 ticks per second
+    private final Map<BlockPos, Integer> icePositions = new HashMap<>();
 
     public MasterStaff(Settings settings) {
         super(settings);
+        // Register the server tick event listener
+        ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
     }
 
     // Enum for different elements
@@ -272,28 +278,33 @@ public class MasterStaff extends Item {
                             mutablePos.set(targetPos.getX() + x, targetPos.getY() + y, targetPos.getZ() + z);
                             if (world.getBlockState(mutablePos).isAir()) {
                                 world.setBlockState(mutablePos, Blocks.ICE.getDefaultState());
+                                // Schedule this ice block for removal
+                                icePositions.put(mutablePos.toImmutable(), ICE_DURATION_TICKS);
                             }
                         }
                     }
                 }
 
-                // Schedule the ice to melt after a delay (e.g., 5 seconds)
-                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-                scheduler.schedule(() -> {
-                    for (int x = -encasementRadius; x <= encasementRadius; x++) {
-                        for (int y = 0; y <= encasementHeight; y++) {
-                            for (int z = -encasementRadius; z <= encasementRadius; z++) {
-                                mutablePos.set(targetPos.getX() + x, targetPos.getY() + y, targetPos.getZ() + z);
-                                if (world.getBlockState(mutablePos).isOf(Blocks.ICE)) {
-                                    world.setBlockState(mutablePos, Blocks.AIR.getDefaultState());
-                                }
-                            }
-                        }
-                    }
-                }, 5, TimeUnit.SECONDS);
+            }
+        }
+    }
 
-                // Shutdown the scheduler after task completion
-                scheduler.shutdown();
+    private void onServerTick(MinecraftServer server) {
+        Iterator<Map.Entry<BlockPos, Integer>> iterator = icePositions.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<BlockPos, Integer> entry = iterator.next();
+            int ticksLeft = entry.getValue() - 1;
+            if (ticksLeft <= 0) {
+                // Remove ice blocks from all worlds
+                for (World world : server.getWorlds()) {
+                    BlockPos pos = entry.getKey();
+                    if (world.getBlockState(pos).isOf(Blocks.ICE)) {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState());
+                    }
+                }
+                iterator.remove();
+            } else {
+                entry.setValue(ticksLeft);
             }
         }
     }

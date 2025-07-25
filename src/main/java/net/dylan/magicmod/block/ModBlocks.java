@@ -2,6 +2,8 @@ package net.dylan.magicmod.block;
 
 import net.dylan.magicmod.MagicMod;
 import net.dylan.magicmod.block.custom.FireCrystalTnt;
+import net.dylan.magicmod.block.custom.IceCrystalTnt;
+import net.dylan.magicmod.block.custom.LightningCrystalTnt;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -86,6 +88,16 @@ public class ModBlocks {
                     .strength(0.0F)
                     .sounds(BlockSoundGroup.GRASS)));
 
+    public static final Block ICE_CRYSTAL_TNT = registerBlock("ice_crystal_tnt",
+            new IceCrystalTnt(AbstractBlock.Settings.create()
+                    .strength(0.0F)
+                    .sounds(BlockSoundGroup.POWDER_SNOW)));
+
+    public static final Block LIGHTNING_CRYSTAL_TNT = registerBlock("lightning_crystal_tnt",
+            new LightningCrystalTnt(AbstractBlock.Settings.create()
+                    .strength(0.0F)
+                    .sounds(BlockSoundGroup.METAL)));
+
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
         return Registry.register(Registries.BLOCK, Identifier.of(MagicMod.MOD_ID, name), block);
@@ -104,7 +116,12 @@ public class ModBlocks {
             entries.add(ModBlocks.MAGIC_CRYSTAL_BLOCK);
             entries.add(ModBlocks.ICE_CRYSTAL_BLOCK);
             entries.add(ModBlocks.OBSIDIAN_CRYSTAL_BLOCK);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE).register(entries -> {
             entries.add(ModBlocks.FIRE_CRYSTAL_TNT);
+            entries.add(ModBlocks.ICE_CRYSTAL_TNT);
+            entries.add(ModBlocks.LIGHTNING_CRYSTAL_TNT);
         });
     }
 }

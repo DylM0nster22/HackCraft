@@ -25,6 +25,7 @@ public class ModItems {
     public static Item WATER_CRYSTAL = registerItem("water_crystal", new Item(new Item.Settings()));
     public static Item NECROMANCY_CRYSTAL = registerItem("necromancy_crystal", new Item(new Item.Settings()));
     public static Item TIME_CRYSTAL = registerItem("time_crystal", new Item(new Item.Settings()));
+    public static Item VOID_CRYSTAL = registerItem("void_crystal", new Item(new Item.Settings()));
 
     public static final Item MASTERSTAFF = new MasterStaff(new Item.Settings().maxCount(1));
     public static final Item FIRESTAFF = new FireStaff(new Item.Settings().maxCount(1));
@@ -41,6 +42,7 @@ public class ModItems {
     public static final Item WATERSTAFF = new WaterStaff(new Item.Settings().maxCount(1));
     public static final Item NECROMANCYSTAFF = new NecromancyStaff(new Item.Settings().maxCount(1));
     public static final Item TIMESTAFF = new TimeStaff(new Item.Settings().maxCount(1));
+    public static final Item VOIDSTAFF = new VoidStaff(new Item.Settings().maxCount(1));
 
 
     private static Item registerItem(String name, Item item) {
@@ -71,5 +73,6 @@ public class ModItems {
         Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "waterstaff"), WATERSTAFF);
         Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "necromancystaff"), NECROMANCYSTAFF);
         Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "timestaff"), TIMESTAFF);
+        Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "voidstaff"), VOIDSTAFF);
     }
 }

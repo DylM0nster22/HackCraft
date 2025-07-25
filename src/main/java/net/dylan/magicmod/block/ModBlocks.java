@@ -95,6 +95,8 @@ public class ModBlocks {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(entries -> {
             entries.add(ModBlocks.MAGIC_CRYSTAL_BLOCK);
+            entries.add(ModBlocks.ICE_CRYSTAL_BLOCK);
+            entries.add(ModBlocks.OBSIDIAN_CRYSTAL_BLOCK);
         });
     }
 }

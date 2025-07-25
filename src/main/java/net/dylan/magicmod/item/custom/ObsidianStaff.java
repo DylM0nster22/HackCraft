@@ -26,7 +26,18 @@ public class ObsidianStaff extends Item {
     private static final int HOLLOW_HEIGHT = 2; // Height of the hollow section
     private static final int BARRIER_DURATION_TICKS = 200; // 10 seconds * 20 ticks per second
 
-    private final Map<BlockPos, Integer> barrierPositions = new HashMap<>();
+    // Map from barrier center position to remaining ticks and the world where it was created
+    private final Map<BlockPos, BarrierInfo> barrierPositions = new HashMap<>();
+    
+    private static class BarrierInfo {
+        int ticksLeft;
+        World world;
+        
+        BarrierInfo(int ticksLeft, World world) {
+            this.ticksLeft = ticksLeft;
+            this.world = world;
+        }
+    }
 
     public ObsidianStaff(Settings settings) {
         super(settings);
@@ -76,7 +87,7 @@ public class ObsidianStaff extends Item {
         }
 
         // Schedule removal after 10 seconds (200 ticks)
-        barrierPositions.put(center, BARRIER_DURATION_TICKS);
+        barrierPositions.put(center, new BarrierInfo(BARRIER_DURATION_TICKS, world));
     }
 
     private void removeObsidianBarrier(World world, BlockPos center) {
@@ -98,18 +109,16 @@ public class ObsidianStaff extends Item {
     }
 
     private void onServerTick(MinecraftServer server) {
-        Iterator<Map.Entry<BlockPos, Integer>> iterator = barrierPositions.entrySet().iterator();
+        Iterator<Map.Entry<BlockPos, BarrierInfo>> iterator = barrierPositions.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<BlockPos, Integer> entry = iterator.next();
-            int ticksLeft = entry.getValue() - 1;
+            Map.Entry<BlockPos, BarrierInfo> entry = iterator.next();
+            BarrierInfo barrierInfo = entry.getValue();
+            int ticksLeft = barrierInfo.ticksLeft - 1;
             if (ticksLeft <= 0) {
-                ServerWorld world = server.getWorld(World.OVERWORLD);
-                if (world != null) {
-                    removeObsidianBarrier(world, entry.getKey());
-                }
+                removeObsidianBarrier(barrierInfo.world, entry.getKey());
                 iterator.remove();
             } else {
-                entry.setValue(ticksLeft);
+                barrierInfo.ticksLeft = ticksLeft;
             }
         }
     }

@@ -3,36 +3,38 @@ package net.dylan.magicmod.item.custom;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 public class IceStaff extends Item {
+    private static final int ICE_DURATION_TICKS = 100; // 5 seconds * 20 ticks per second
+    private final Map<BlockPos, Integer> icePositions = new HashMap<>();
+
     public IceStaff(Settings settings) {
         super(settings);
+        // Register the server tick event listener
+        ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
     }
 
     private enum Element {
@@ -89,28 +91,32 @@ public class IceStaff extends Item {
                             mutablePos.set(targetPos.getX() + x, targetPos.getY() + y, targetPos.getZ() + z);
                             if (world.getBlockState(mutablePos).isAir()) {
                                 world.setBlockState(mutablePos, Blocks.ICE.getDefaultState());
+                                // Schedule this ice block for removal
+                                icePositions.put(mutablePos.toImmutable(), ICE_DURATION_TICKS);
                             }
                         }
                     }
                 }
+            }
+        }
+    }
 
-                // Schedule the ice to melt after a delay (e.g., 5 seconds)
-                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-                scheduler.schedule(() -> {
-                    for (int x = -encasementRadius; x <= encasementRadius; x++) {
-                        for (int y = 0; y <= encasementHeight; y++) {
-                            for (int z = -encasementRadius; z <= encasementRadius; z++) {
-                                mutablePos.set(targetPos.getX() + x, targetPos.getY() + y, targetPos.getZ() + z);
-                                if (world.getBlockState(mutablePos).isOf(Blocks.ICE)) {
-                                    world.setBlockState(mutablePos, Blocks.AIR.getDefaultState());
-                                }
-                            }
-                        }
+    private void onServerTick(MinecraftServer server) {
+        Iterator<Map.Entry<BlockPos, Integer>> iterator = icePositions.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<BlockPos, Integer> entry = iterator.next();
+            int ticksLeft = entry.getValue() - 1;
+            if (ticksLeft <= 0) {
+                // Remove ice blocks from all worlds
+                for (World world : server.getWorlds()) {
+                    BlockPos pos = entry.getKey();
+                    if (world.getBlockState(pos).isOf(Blocks.ICE)) {
+                        world.setBlockState(pos, Blocks.AIR.getDefaultState());
                     }
-                }, 5, TimeUnit.SECONDS);
-
-                // Shutdown the scheduler after task completion
-                scheduler.shutdown();
+                }
+                iterator.remove();
+            } else {
+                entry.setValue(ticksLeft);
             }
         }
     }

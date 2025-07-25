@@ -7,6 +7,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -74,6 +76,24 @@ public class LightningStaff extends Item {
         if (lightning != null) {
             lightning.refreshPositionAfterTeleport(position);
             world.spawnEntity(lightning);
+            
+            // Add enhanced electrical effects
+            if (world instanceof ServerWorld serverWorld) {
+                // Electric sparks around the impact
+                serverWorld.spawnParticles(ParticleTypes.ELECTRIC_SPARK, 
+                    position.x, position.y + 1, position.z, 
+                    20, 1.0, 1.0, 1.0, 0.3);
+                    
+                // Blue flame particles for magical effect
+                serverWorld.spawnParticles(ParticleTypes.SOUL_FIRE_FLAME, 
+                    position.x, position.y + 1, position.z, 
+                    10, 0.5, 1.0, 0.5, 0.1);
+                    
+                // End rod particles for the lightning trail
+                serverWorld.spawnParticles(ParticleTypes.END_ROD, 
+                    position.x, position.y + 5, position.z, 
+                    15, 0.3, 2.0, 0.3, 0.1);
+            }
         }
     }
 

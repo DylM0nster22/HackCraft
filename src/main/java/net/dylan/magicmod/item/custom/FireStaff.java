@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Item.Settings;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -53,6 +55,25 @@ public class FireStaff extends Item {
             fireball.setVelocity(look.x, look.y, look.z, 1.5F, 1.0F);
 
             world.spawnEntity(fireball);
+
+            // Add enhanced particle effects around the player
+            if (world instanceof ServerWorld serverWorld) {
+                // Fire particles around the staff
+                Vec3d playerPos = player.getPos();
+                serverWorld.spawnParticles(ParticleTypes.FLAME, 
+                    playerPos.x, playerPos.y + 1.5, playerPos.z, 
+                    15, 0.5, 0.5, 0.5, 0.1);
+                    
+                // Smoke trail
+                serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, 
+                    playerPos.x, playerPos.y + 1.5, playerPos.z, 
+                    8, 0.3, 0.3, 0.3, 0.05);
+                    
+                // Lava particles for dramatic effect
+                serverWorld.spawnParticles(ParticleTypes.LAVA, 
+                    playerPos.x, playerPos.y + 1.5, playerPos.z, 
+                    5, 0.4, 0.4, 0.4, 0.1);
+            }
         }
     }
 

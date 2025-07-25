@@ -122,15 +122,32 @@ public class WindStaff extends Item {
         }
 
         private void spawnParticles(double radius, double height) {
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 30; i++) {
                 double angle = world.random.nextDouble() * 2 * Math.PI;
                 double distance = world.random.nextDouble() * radius;
                 double x = center.x + distance * Math.cos(angle);
                 double z = center.z + distance * Math.sin(angle);
                 double y = center.y + world.random.nextDouble() * height;
 
+                // Multiple particle types for enhanced tornado effect
                 world.spawnParticles(ParticleTypes.CLOUD, x, y, z, 1, 0, 0, 0, 0);
+                world.spawnParticles(ParticleTypes.WHITE_SMOKE, x, y, z, 1, 0, 0, 0, 0);
+                
+                // Add swirling dust particles
+                if (world.random.nextFloat() < 0.7f) {
+                    world.spawnParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 1, 0, 0, 0, 0);
+                }
+                
+                // Add wind trail particles
+                if (world.random.nextFloat() < 0.5f) {
+                    world.spawnParticles(ParticleTypes.POOF, x, y, z, 1, 0.1, 0.1, 0.1, 0.05);
+                }
             }
+            
+            // Central tornado core particles
+            world.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, 
+                center.x, center.y + height/2, center.z, 
+                5, 0.2, height/4, 0.2, 0.1);
         }
     }
 }

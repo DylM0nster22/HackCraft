@@ -3,12 +3,17 @@ package net.dylan.magicmod.item.custom;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.BossBar;
+import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -26,10 +31,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class IceStaff extends Item {
     private static final int ICE_DURATION_TICKS = 100; // 5 seconds * 20 ticks per second
+    private static final int COOLDOWN_TICKS = 60; // 3 seconds cooldown
     private final Map<BlockPos, Integer> icePositions = new HashMap<>();
+    private final Map<UUID, ServerBossBar> playerBossBars = new HashMap<>();
+    private final Map<UUID, Integer> playerCooldowns = new HashMap<>();
 
     public IceStaff(Settings settings) {
         super(settings);
@@ -57,11 +66,22 @@ public class IceStaff extends Item {
     }
 
     private void useIceElement(World world, PlayerEntity player) {
+        // Check cooldown
+        if (playerCooldowns.containsKey(player.getUuid()) && playerCooldowns.get(player.getUuid()) > 0) {
+            return; // Still on cooldown
+        }
+
         // Play ice sound
         world.playSound(null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.BLOCK_GLASS_PLACE, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         if (!world.isClient) {
+            // Set cooldown and create boss bar
+            playerCooldowns.put(player.getUuid(), COOLDOWN_TICKS);
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                createCooldownBossBar(serverPlayer);
+            }
+
             // Perform a ray trace to find the targeted entity with extended range (50 blocks)
             Vec3d startPos = player.getCameraPosVec(1.0F);
             Vec3d direction = player.getRotationVec(1.0F);
@@ -93,6 +113,13 @@ public class IceStaff extends Item {
                                 world.setBlockState(mutablePos, Blocks.ICE.getDefaultState());
                                 // Schedule this ice block for removal
                                 icePositions.put(mutablePos.toImmutable(), ICE_DURATION_TICKS);
+                                
+                                // Add ice particles
+                                if (world instanceof ServerWorld serverWorld) {
+                                    serverWorld.spawnParticles(ParticleTypes.SNOWFLAKE, 
+                                        mutablePos.getX() + 0.5, mutablePos.getY() + 0.5, mutablePos.getZ() + 0.5, 
+                                        3, 0.3, 0.3, 0.3, 0.1);
+                                }
                             }
                         }
                     }
@@ -101,7 +128,30 @@ public class IceStaff extends Item {
         }
     }
 
+    private void createCooldownBossBar(ServerPlayerEntity player) {
+        ServerBossBar bossBar = new ServerBossBar(
+            Text.literal("Ice Staff Cooldown"), 
+            BossBar.Color.BLUE, 
+            BossBar.Style.PROGRESS
+        );
+        bossBar.addPlayer(player);
+        bossBar.setPercent(1.0f);
+        playerBossBars.put(player.getUuid(), bossBar);
+    }
+
+    private void updateCooldownBossBar(ServerPlayerEntity player, int ticksLeft) {
+        ServerBossBar bossBar = playerBossBars.get(player.getUuid());
+        if (bossBar != null) {
+            float progress = (float) ticksLeft / COOLDOWN_TICKS;
+            bossBar.setPercent(progress);
+            if (ticksLeft <= 0) {
+                bossBar.removePlayer(player);
+                playerBossBars.remove(player.getUuid());
+            }
+        }
+    }
     private void onServerTick(MinecraftServer server) {
+        // Handle ice block removal
         Iterator<Map.Entry<BlockPos, Integer>> iterator = icePositions.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<BlockPos, Integer> entry = iterator.next();
@@ -112,9 +162,34 @@ public class IceStaff extends Item {
                     BlockPos pos = entry.getKey();
                     if (world.getBlockState(pos).isOf(Blocks.ICE)) {
                         world.setBlockState(pos, Blocks.AIR.getDefaultState());
+                        // Add break particles
+                        if (world instanceof ServerWorld serverWorld) {
+                            serverWorld.spawnParticles(ParticleTypes.ITEM_SNOWBALL, 
+                                pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 
+                                8, 0.3, 0.3, 0.3, 0.1);
+                        }
                     }
                 }
                 iterator.remove();
+            } else {
+                entry.setValue(ticksLeft);
+            }
+        }
+
+        // Handle player cooldowns and boss bars
+        Iterator<Map.Entry<UUID, Integer>> cooldownIterator = playerCooldowns.entrySet().iterator();
+        while (cooldownIterator.hasNext()) {
+            Map.Entry<UUID, Integer> entry = cooldownIterator.next();
+            UUID playerId = entry.getKey();
+            int ticksLeft = entry.getValue() - 1;
+            
+            ServerPlayerEntity player = server.getPlayerManager().getPlayer(playerId);
+            if (player != null) {
+                updateCooldownBossBar(player, ticksLeft);
+            }
+            
+            if (ticksLeft <= 0) {
+                cooldownIterator.remove();
             } else {
                 entry.setValue(ticksLeft);
             }

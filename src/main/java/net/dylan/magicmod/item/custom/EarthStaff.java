@@ -76,10 +76,43 @@ public class EarthStaff extends Item {
                 }
             }
 
-            // Create particle effects
+            // Enhanced particle effects
             if (world instanceof ServerWorld serverWorld) {
-                serverWorld.spawnParticles(ParticleTypes.EXPLOSION, player.getX(), player.getY(), player.getZ(),
-                        20, 1.0, 0.5, 1.0, 0.1);
+                Vec3d playerPos = player.getPos();
+                
+                // Central explosion
+                serverWorld.spawnParticles(ParticleTypes.EXPLOSION, 
+                    playerPos.x, playerPos.y, playerPos.z,
+                    10, 1.0, 0.5, 1.0, 0.1);
+                
+                // Create expanding ring of particles
+                for (int i = 0; i < 36; i++) {
+                    double angle = (i / 36.0) * 2 * Math.PI;
+                    for (double r = 1; r <= radius; r += 0.5) {
+                        double x = playerPos.x + Math.cos(angle) * r;
+                        double z = playerPos.z + Math.sin(angle) * r;
+                        
+                        // Block break particles
+                        serverWorld.spawnParticles(ParticleTypes.BLOCK_CRACK,
+                            x, playerPos.y + 0.1, z,
+                            3, 0.2, 0.2, 0.2, 0.1);
+                            
+                        // Dust particles for earth effect
+                        serverWorld.spawnParticles(ParticleTypes.DUST_CLOUD,
+                            x, playerPos.y + 0.5, z,
+                            2, 0.3, 0.3, 0.3, 0.05);
+                    }
+                }
+                
+                // Additional dramatic effects
+                serverWorld.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    playerPos.x, playerPos.y + 1, playerPos.z,
+                    15, 2.0, 1.0, 2.0, 0.1);
+                    
+                // Podzol particles for earthy effect
+                serverWorld.spawnParticles(ParticleTypes.FALLING_DUST,
+                    playerPos.x, playerPos.y + 2, playerPos.z,
+                    20, 3.0, 2.0, 3.0, 0.2);
             }
         }
     }

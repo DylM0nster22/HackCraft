@@ -1,6 +1,7 @@
 package net.dylan.magicmod.block;
 
 import net.dylan.magicmod.MagicMod;
+import net.dylan.magicmod.block.custom.FireCrystalTnt;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -79,6 +80,12 @@ public class ModBlocks {
             new ExperienceDroppingBlock(UniformIntProvider.create(3, 6),
                     AbstractBlock.Settings.create().strength(4f).requiresTool().sounds(BlockSoundGroup.DEEPSLATE)));
 
+    // Crystal TNT Blocks
+    public static final Block FIRE_CRYSTAL_TNT = registerBlock("fire_crystal_tnt",
+            new FireCrystalTnt(AbstractBlock.Settings.create()
+                    .strength(0.0F)
+                    .sounds(BlockSoundGroup.GRASS)));
+
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
         return Registry.register(Registries.BLOCK, Identifier.of(MagicMod.MOD_ID, name), block);
@@ -97,6 +104,7 @@ public class ModBlocks {
             entries.add(ModBlocks.MAGIC_CRYSTAL_BLOCK);
             entries.add(ModBlocks.ICE_CRYSTAL_BLOCK);
             entries.add(ModBlocks.OBSIDIAN_CRYSTAL_BLOCK);
+            entries.add(ModBlocks.FIRE_CRYSTAL_TNT);
         });
     }
 }

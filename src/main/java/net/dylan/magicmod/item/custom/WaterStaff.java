@@ -36,12 +36,14 @@ public class WaterStaff extends Item {
             Vec3d lookVec = user.getRotationVec(1.0F);
             Direction direction = Direction.getFacing(lookVec.x, lookVec.y, lookVec.z);
             BlockPos startPos = user.getBlockPos().offset(direction);
-
             for (int i = 0; i < WAVE_RANGE; i++) {
                 BlockPos pos = startPos.offset(direction, i);
-                if (world.isAir(pos) || world.getBlockState(pos).isReplaceable()) {
+                if ((world.isAir(pos) || world.getBlockState(pos).isReplaceable()) && !world.getBlockState(pos).getMaterial().isLiquid()) {
                     world.setBlockState(pos, Blocks.WATER.getDefaultState());
-                    scheduleWaterRemoval(world, pos);
+                    if (world instanceof net.minecraft.server.world.ServerWorld serverWorld) {
+                        serverWorld.spawnParticles(net.minecraft.particle.ParticleTypes.SPLASH, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 10, 0.2, 0.2, 0.2, 0.1);
+                        scheduleWaterRemoval(serverWorld, pos);
+                    }
                 } else if (world.getBlockState(pos).isOf(Blocks.FIRE)) {
                     world.setBlockState(pos, Blocks.AIR.getDefaultState());
                 } else if (world.getBlockState(pos).isOf(Blocks.LAVA)) {
@@ -52,7 +54,6 @@ public class WaterStaff extends Item {
                     }
                 }
             }
-
             user.getItemCooldownManager().set(this, COOLDOWN_TICKS);
             world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
             world.emitGameEvent(user, GameEvent.ITEM_INTERACT_START, user.getBlockPos());
@@ -60,11 +61,17 @@ public class WaterStaff extends Item {
         return TypedActionResult.success(user.getStackInHand(hand));
     }
 
-    private void scheduleWaterRemoval(World world, BlockPos pos) {
-        scheduler.schedule(() -> {
-            if (world.getBlockState(pos).isOf(Blocks.WATER)) {
-                world.setBlockState(pos, Blocks.AIR.getDefaultState());
-            }
-        }, WATER_LIFETIME_SECONDS, TimeUnit.SECONDS);
+    // Use server tick scheduling for water removal
+    private void scheduleWaterRemoval(net.minecraft.server.world.ServerWorld world, BlockPos pos) {
+        final int delayTicks = WATER_LIFETIME_SECONDS * 20;
+        final BlockPos waterPos = pos.toImmutable();
+        world.getServer().execute(() -> {
+            world.getServer().getTickScheduler().schedule(() -> {
+                if (world.getBlockState(waterPos).isOf(Blocks.WATER)) {
+                    world.setBlockState(waterPos, Blocks.AIR.getDefaultState());
+                    world.spawnParticles(net.minecraft.particle.ParticleTypes.CLOUD, waterPos.getX() + 0.5, waterPos.getY() + 1, waterPos.getZ() + 0.5, 5, 0.2, 0.2, 0.2, 0.05);
+                }
+            }, delayTicks);
+        });
     }
 }

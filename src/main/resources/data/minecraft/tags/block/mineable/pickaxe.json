@@ -3,7 +3,6 @@
   "values": [
     "magicmod:magic_crystal_block",
     "magicmod:magic_crystal_ore",
-    "magicmod:magic_crystal_deepslate_ore",
-    "magicmod:magic_tnt"
+    "magicmod:magic_crystal_deepslate_ore"
   ]
 }

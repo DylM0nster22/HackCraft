@@ -102,6 +102,14 @@ public class ModItems {
     public static final Item MAGMASTAFF = new MagmaStaff(new Item.Settings().maxCount(1));
     public static final Item FROSTSTAFF = new FrostStaff(new Item.Settings().maxCount(1));
 
+    // Additional magical items beyond staffs
+    public static final Item FIREORB = new FireOrb(new Item.Settings().maxCount(1));
+    public static final Item ICEORB = new IceOrb(new Item.Settings().maxCount(1));
+    public static final Item LIGHTNINGLENS = new LightningLens(new Item.Settings().maxCount(1));
+    public static final Item MAGICWAND = new MagicWand(new Item.Settings().maxCount(1));
+    public static final Item CRYSTAL_SHARD = new CrystalShard(new Item.Settings());
+    public static final Item ENCHANTED_SCROLL = new EnchantedScroll(new Item.Settings());
+
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, name), item);
@@ -161,5 +169,13 @@ public class ModItems {
         Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "steamstaff"), STEAMSTAFF);
         Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "magmastaff"), MAGMASTAFF);
         Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "froststaff"), FROSTSTAFF);
+        
+        // Register additional magical items
+        Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "fireorb"), FIREORB);
+        Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "iceorb"), ICEORB);
+        Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "lightninglens"), LIGHTNINGLENS);
+        Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "magicwand"), MAGICWAND);
+        Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "crystal_shard"), CRYSTAL_SHARD);
+        Registry.register(Registries.ITEM, Identifier.of(MagicMod.MOD_ID, "enchanted_scroll"), ENCHANTED_SCROLL);
     }
 }
